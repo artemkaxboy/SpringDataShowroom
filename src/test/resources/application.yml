@@ -1,0 +1,19 @@
+server:
+  error:
+    include-message: always
+    include-exception: on
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+    properties.hibernate.format_sql: true
+    show-sql: true
+
+logging:
+  level:
+    org.springframework: info
