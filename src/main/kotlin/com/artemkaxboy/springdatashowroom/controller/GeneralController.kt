@@ -18,5 +18,3 @@ class GeneralController(
     @GetMapping("/version", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getVersion(): VersionDto = generalService.getApplicationVersion()
 }
-
-
