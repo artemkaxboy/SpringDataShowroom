@@ -1,7 +1,9 @@
 @file:Suppress("SpellCheckingInspection")
 
+import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
+import java.time.ZonedDateTime
 
 plugins {
     id("org.springframework.boot") version "2.3.4.RELEASE"
@@ -12,14 +14,17 @@ plugins {
     kotlin("kapt") version "1.4.10"
 
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
-}
 
-apply {
-    plugin("kotlin")
+    id("com.google.cloud.tools.jib") version "2.6.0"
+    id("org.ajoberstar.grgit") version "4.1.0"
 }
 
 group = "com.artemkaxboy"
 version = "0.0.1-SNAPSHOT"
+
+val kotlinLoggingVersion by extra("1.7.10")
+val swaggerVersion by extra("1.4.3")
+val modelMapperVersion by extra("2.3.8")
 
 val local = Properties().apply {
     rootProject.file("local.properties")
@@ -28,9 +33,8 @@ val local = Properties().apply {
         ?.use { this.load(it) }
 }
 
-val kotlinLoggingVersion by extra("1.7.10")
-val swaggerVersion by extra("1.4.3")
-val modelMapperVersion by extra("2.3.8")
+// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
+val commitTime: ZonedDateTime = Grgit.open { currentDir = projectDir }.head().dateTime
 
 sourceSets {
     test {
@@ -101,5 +105,33 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "11"
+    }
+}
+
+jib {
+    to {
+        image = "ghcr.io/artemkaxboy/springdatashowroom"
+
+        tags = setOf("latest", "$version")
+
+        auth {
+            username = local.getProperty("github.username") ?: System.getenv("GITHUB_ACTOR")
+            password = local.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+
+    container {
+        user = "999:999"
+        creationTime = commitTime.toString()
+        ports = listOf("8080")
+
+        environment = mapOf(
+            "IMAGE_VERSION" to "$version"
+        )
+
+        labels = mapOf(
+            "maintainer" to "Artem Kolin <artemkaxboy@gmail.com>",
+            "org.opencontainers.image.source" to "https://github.com/artemkaxboy/SpringDataShowroom"
+        )
     }
 }
