@@ -151,5 +151,4 @@ internal class CustomerControllerTest {
             .exchange()
             .expectJson(HttpStatus.BAD_REQUEST)
     }
-
 }

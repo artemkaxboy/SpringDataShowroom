@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 
@@ -8,6 +10,8 @@ plugins {
     kotlin("plugin.spring") version "1.4.10"
     kotlin("plugin.jpa") version "1.4.10"
     kotlin("kapt") version "1.4.10"
+
+    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
 
 apply {
