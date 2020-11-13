@@ -2,7 +2,6 @@ server:
   error:
     include-message: always
     include-exception: on
-  port: 8079
 
 spring:
 #  datasource:
