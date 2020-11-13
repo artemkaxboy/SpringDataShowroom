@@ -36,7 +36,7 @@ internal class CustomerControllerTest {
             // .responseTimeout(Duration.ofMinutes(5)) // @example timeout for webClient
             // .build()
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(newCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -54,7 +54,7 @@ internal class CustomerControllerTest {
 
         webTestClient
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(newCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -62,7 +62,7 @@ internal class CustomerControllerTest {
 
         webTestClient
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(newCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -76,7 +76,7 @@ internal class CustomerControllerTest {
 
         val savedCustomer = webTestClient
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(newCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -90,7 +90,7 @@ internal class CustomerControllerTest {
 
         webTestClient
             .put()
-            .uri("$BASE_URL/customer/${changedCustomer.id}")
+            .uri("$BASE_URL/customers/${changedCustomer.id}")
             .bodyValue(changedCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -108,7 +108,7 @@ internal class CustomerControllerTest {
 
         webTestClient
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(customer1)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -117,7 +117,7 @@ internal class CustomerControllerTest {
         val customer2 = NewCustomerDto("account2", "customer2")
         val savedCustomer2 = webTestClient
             .post()
-            .uri("$BASE_URL/customer")
+            .uri("$BASE_URL/customers")
             .bodyValue(customer2)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -131,7 +131,7 @@ internal class CustomerControllerTest {
 
         webTestClient
             .put()
-            .uri("$BASE_URL/customer/${changedCustomer.id}")
+            .uri("$BASE_URL/customers/${changedCustomer.id}")
             .bodyValue(changedCustomer)
             .accept(MediaType.APPLICATION_JSON)
             .exchange()
@@ -147,7 +147,7 @@ internal class CustomerControllerTest {
     fun `pass when cannot delete absent customer`() {
         webTestClient
             .delete()
-            .uri("$BASE_URL/customer/999000")
+            .uri("$BASE_URL/customers/999000")
             .exchange()
             .expectJson(HttpStatus.BAD_REQUEST)
     }
