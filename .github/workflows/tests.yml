@@ -30,6 +30,11 @@ jobs:
           # configuration-cache-enabled: true
           dependencies-cache-enabled: true
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-result
+          path: ./build/reports/tests/test/
+
       - name: Upload coverage result
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
