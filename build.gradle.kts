@@ -1,31 +1,41 @@
 @file:Suppress("SpellCheckingInspection")
 
+import org.ajoberstar.grgit.Commit
 import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
 import java.time.ZonedDateTime
 
 plugins {
+    val kotlinVersion = "1.4.10"
+
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
+
+    // ----------------------- spring ------------------------
     id("org.springframework.boot") version "2.3.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.4.10"
-    kotlin("plugin.spring") version "1.4.10"
-    kotlin("plugin.jpa") version "1.4.10"
-    kotlin("kapt") version "1.4.10"
+
+    // ----------------------- jacoco ------------------------
     jacoco
 
+    // ----------------------- ktlint ------------------------
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 
+    // ----------------------- jib ------------------------
     id("com.google.cloud.tools.jib") version "2.6.0"
     id("org.ajoberstar.grgit") version "4.1.0"
 }
 
-group = "com.artemkaxboy"
-version = "0.0.1-SNAPSHOT"
+val author = "Artem Kolin <artemkaxboy@gmail.com>"
+val sourceUrl = "https://github.com/artemkaxboy/SpringDataShowroom"
 
-val kotlinLoggingVersion by extra("1.7.10")
-val swaggerVersion by extra("1.4.3")
-val modelMapperVersion by extra("2.3.8")
+// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
+val commit: Commit = Grgit.open { currentDir = projectDir }.head()
+val commitTime: ZonedDateTime = commit.dateTime
+val commitHash: String = commit.id.take(8) // short commit id contains 8 chars
 
 val local = Properties().apply {
     rootProject.file("local.properties")
@@ -34,8 +44,8 @@ val local = Properties().apply {
         ?.use { this.load(it) }
 }
 
-// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
-val commitTime: ZonedDateTime = Grgit.open { currentDir = projectDir }.head().dateTime
+group = "com.artemkaxboy"
+version = local.getProperty("application.version") ?: "local"
 
 sourceSets {
     test {
@@ -51,56 +61,75 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    // implementation("org.flywaydb:flyway-core")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    runtimeOnly("org.postgresql:postgresql")
-    testRuntimeOnly("com.h2database:h2")
 
+    // ----------------------- database ------------------------
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
+    // implementation("org.flywaydb:flyway-core")
+
+    // ----------------------- tests ------------------------
+    testRuntimeOnly("com.h2database:h2")
     testImplementation("io.mockk:mockk:1.10.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
 
-    // implementation("org.springframework.boot:spring-boot-starter-security")
+    // ----------------------- spring webflux ------------------------
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-    implementation("com.github.artemkaxboy:CoreLib:v0.1.4")
-
+    // ----------------------- swagger ------------------------
     // https://github.com/springdoc/springdoc-openapi
-    // swagger
-    implementation("org.springdoc:springdoc-openapi-webflux-ui:$swaggerVersion")
+    implementation("org.springdoc:springdoc-openapi-webflux-ui:1.4.3")
 
-    // logging
-    implementation("io.github.microutils:kotlin-logging:$kotlinLoggingVersion")
-
-    // validation       https://www.baeldung.com/javax-validation
+    // ----------------------- logging ------------------------
+    // https://www.baeldung.com/javax-validation
     implementation("org.hibernate.validator:hibernate-validator")
     // implementation("org.glassfish:javax.el:3.0.0")
 
+    // ----------------------- artemkaxboy corelib ------------------------
+    implementation("com.github.artemkaxboy:CoreLib:v0.1.4")
+
+    // ----------------------- logging ------------------------
+    implementation("io.github.microutils:kotlin-logging:1.7.10")
+
+    // ----------------------- model mapping ------------------------
     // entity dto mapper    https://habr.com/ru/post/438808/
-    // implementation("org.modelmapper:modelmapper:$modelMapperVersion")
+    // implementation("org.modelmapper:modelmapper:2.3.8")
     // locally fixed https://github.com/modelmapper/modelmapper/issues/553
     implementation(files("libs/modelmapper-2.3.9-SNAPSHOT.jar"))
 
-    // kapt
+    // ----------------------- annotation proccessing ------------------------
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
+tasks {
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "14"
+    withType<Test> {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
+    withType<KotlinCompile> { // works for both compileKotlin and compileTestKotlin
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xjsr305=strict")
+            jvmTarget = "11"
+        }
+    }
+
+    // https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
+    jacocoTestReport {
+        dependsOn("test")
+
+        reports {
+            xml.isEnabled = true
+            csv.isEnabled = false
+            html.isEnabled = true
+            html.destination = file("$buildDir/reports/coverage")
+        }
     }
 }
 
@@ -118,7 +147,7 @@ jib {
 
     container {
         user = "999:999"
-        creationTime = commitTime.toString()
+        creationTime = "$commitTime"
         ports = listOf("8080")
 
         environment = mapOf(
@@ -126,20 +155,16 @@ jib {
         )
 
         labels = mapOf(
-            "maintainer" to "Artem Kolin <artemkaxboy@gmail.com>",
-            "org.opencontainers.image.source" to "https://github.com/artemkaxboy/SpringDataShowroom"
+            "maintainer" to author,
+            "org.opencontainers.image.created" to "$commitTime",
+            "org.opencontainers.image.authors" to author,
+            "org.opencontainers.image.url" to sourceUrl,
+            "org.opencontainers.image.documentation" to sourceUrl,
+            "org.opencontainers.image.source" to sourceUrl,
+            "org.opencontainers.image.version" to "$version",
+            "org.opencontainers.image.revision" to commitHash,
+            "org.opencontainers.image.vendor" to author,
+            "org.opencontainers.image.title" to name
         )
-    }
-}
-
-// https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
-tasks.jacocoTestReport {
-    dependsOn("test")
-
-    reports {
-        xml.isEnabled = true
-        csv.isEnabled = false
-        html.isEnabled = true
-        html.destination = file("$buildDir/reports/coverage")
     }
 }

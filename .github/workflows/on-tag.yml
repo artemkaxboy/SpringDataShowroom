@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - v*.*
+      - v*.*.*
+
+jobs:
+
+  create-github-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Publish docker image
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: jib
+          dependencies-cache-enabled: true
