@@ -18,6 +18,8 @@ jobs:
 
       - name: Publish docker image
         uses: eskatos/gradle-command-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           arguments: jib
           dependencies-cache-enabled: true
