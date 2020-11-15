@@ -12,6 +12,7 @@ plugins {
     kotlin("plugin.spring") version "1.4.10"
     kotlin("plugin.jpa") version "1.4.10"
     kotlin("kapt") version "1.4.10"
+    jacoco
 
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 
@@ -128,5 +129,17 @@ jib {
             "maintainer" to "Artem Kolin <artemkaxboy@gmail.com>",
             "org.opencontainers.image.source" to "https://github.com/artemkaxboy/SpringDataShowroom"
         )
+    }
+}
+
+// https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
+tasks.jacocoTestReport {
+    dependsOn("test")
+
+    reports {
+        xml.isEnabled = true
+        csv.isEnabled = false
+        html.isEnabled = true
+        html.destination = file("$buildDir/reports/coverage")
     }
 }
