@@ -30,6 +30,7 @@ plugins {
 }
 
 val author = "Artem Kolin <artemkaxboy@gmail.com>"
+val sourceUrl = "https://github.com/artemkaxboy/SpringDataShowroom"
 
 // https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
 val commit: Commit = Grgit.open { currentDir = projectDir }.head()
@@ -157,9 +158,9 @@ jib {
             "maintainer" to author,
             "org.opencontainers.image.created" to "$commitTime",
             "org.opencontainers.image.authors" to author,
-            "org.opencontainers.image.url" to "https://github.com/artemkaxboy/SpringDataShowroom",
-            "org.opencontainers.image.documentation" to "https://github.com/artemkaxboy/SpringDataShowroom",
-            "org.opencontainers.image.source" to "https://github.com/artemkaxboy/SpringDataShowroom",
+            "org.opencontainers.image.url" to sourceUrl,
+            "org.opencontainers.image.documentation" to sourceUrl,
+            "org.opencontainers.image.source" to sourceUrl,
             "org.opencontainers.image.version" to "$version",
             "org.opencontainers.image.revision" to commitHash,
             "org.opencontainers.image.vendor" to author,
