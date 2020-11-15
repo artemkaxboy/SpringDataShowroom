@@ -45,7 +45,7 @@ val local = Properties().apply {
 }
 
 group = "com.artemkaxboy"
-version = local.getProperty("application.version") ?: "local"
+version = System.getenv("RELEASE_VERSION") ?: local.getProperty("application.version") ?: "local"
 
 sourceSets {
     test {
@@ -134,6 +134,9 @@ tasks {
 }
 
 jib {
+    from {
+        image = "gcr.io/distroless/java:11"
+    }
     to {
         image = "ghcr.io/artemkaxboy/springdatashowroom"
 
