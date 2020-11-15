@@ -1,11 +1,11 @@
 package com.artemkaxboy.springdatashowroom.customrepo.controller
 
-import com.artemkaxboy.kotlin.corelib.exceptions.ExceptionUtils.getMessage
-import com.artemkaxboy.kotlin.corelib.exceptions.getOrElse
 import com.artemkaxboy.springdatashowroom.configuration.API_V1
 import com.artemkaxboy.springdatashowroom.customrepo.PersonCustomDto
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.service.PersonCustom2Service
 import com.artemkaxboy.springdatashowroom.customrepo.springstyle.service.PersonCustom1Service
+import com.github.artemkaxboy.corelib.exceptions.ExceptionUtils.getMessage
+import com.github.artemkaxboy.corelib.exceptions.getOrElse
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.modelmapper.ModelMapper
