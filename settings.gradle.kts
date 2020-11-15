@@ -1,1 +1,1 @@
-rootProject.name = "spring-data-showroom"
+rootProject.name = "Spring Data Showroom"
