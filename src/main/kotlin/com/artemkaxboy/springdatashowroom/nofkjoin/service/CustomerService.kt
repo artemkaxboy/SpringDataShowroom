@@ -1,12 +1,12 @@
 package com.artemkaxboy.springdatashowroom.nofkjoin.service
 
-import com.artemkaxboy.kotlin.corelib.exceptions.ExceptionUtils.getMessage
-import com.artemkaxboy.kotlin.corelib.exceptions.Result
-import com.artemkaxboy.kotlin.corelib.exceptions.getOrElse
 import com.artemkaxboy.springdatashowroom.nofkjoin.entity.Customer
 import com.artemkaxboy.springdatashowroom.nofkjoin.entity.Order
 import com.artemkaxboy.springdatashowroom.nofkjoin.repository.CustomerRepository
 import com.artemkaxboy.springdatashowroom.nofkjoin.repository.OrderRepository
+import com.github.artemkaxboy.corelib.exceptions.ExceptionUtils.getMessage
+import com.github.artemkaxboy.corelib.exceptions.Result
+import com.github.artemkaxboy.corelib.exceptions.getOrElse
 import mu.KotlinLogging
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull

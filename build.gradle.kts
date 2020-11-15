@@ -46,15 +46,7 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven {
-        name = "Github"
-        url = uri("https://maven.pkg.github.com/artemkaxboy/CoreLib")
-
-        credentials {
-            username = local.getProperty("github.username") ?: System.getenv("GITHUB_ACTOR")
-            password = local.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
-        }
-    }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -75,7 +67,7 @@ dependencies {
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
-    implementation("com.artemkaxboy.kotlin:corelib:v0.1.1")
+    implementation("com.github.artemkaxboy:CoreLib:v0.1.4")
 
     // https://github.com/springdoc/springdoc-openapi
     // swagger
@@ -99,6 +91,9 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 tasks.withType<KotlinCompile> {

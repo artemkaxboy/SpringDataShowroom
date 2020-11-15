@@ -1,10 +1,10 @@
 package com.artemkaxboy.springdatashowroom.customrepo.extensions.service
 
-import com.artemkaxboy.kotlin.corelib.exceptions.Result
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.entity.PersonCustom2
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.repository.PersonCustom2Repository
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.repository.updateRatingById
 import com.artemkaxboy.springdatashowroom.util.NameGenerator
+import com.github.artemkaxboy.corelib.exceptions.Result
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 

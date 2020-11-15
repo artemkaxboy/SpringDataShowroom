@@ -1,9 +1,9 @@
 package com.artemkaxboy.springdatashowroom.customrepo.springstyle.service
 
-import com.artemkaxboy.kotlin.corelib.exceptions.Result
 import com.artemkaxboy.springdatashowroom.customrepo.springstyle.entity.PersonCustom1
 import com.artemkaxboy.springdatashowroom.customrepo.springstyle.repository.PersonCustom1Repository
 import com.artemkaxboy.springdatashowroom.util.NameGenerator
+import com.github.artemkaxboy.corelib.exceptions.Result
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
