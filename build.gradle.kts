@@ -135,7 +135,7 @@ tasks {
 
 jib {
     from {
-        image = "gcr.io/distroless/java:11"
+        image = "gcr.io/distroless/java:11-nonroot"
     }
     to {
         image = "ghcr.io/artemkaxboy/springdatashowroom"
