@@ -140,8 +140,8 @@ jib {
         tags = setOf("latest", "$version")
 
         auth {
-            username = local.getProperty("github.username") ?: System.getenv("GITHUB_ACTOR")
-            password = local.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
         }
     }
 
