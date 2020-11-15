@@ -19,15 +19,10 @@ jobs:
       - name: Set RELEASE_VERSION variable
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - name: Show vars
-        run: export
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish docker image
         uses: eskatos/gradle-command-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
         with:
           arguments: jib
           dependencies-cache-enabled: true

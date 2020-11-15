@@ -144,7 +144,7 @@ jib {
 
         auth {
             username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
+            password = System.getenv("CONTAINER_REGISTRY_TOKEN")
         }
     }
 
