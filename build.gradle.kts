@@ -154,9 +154,9 @@ jib {
     }
 
     to {
-        image = "ghcr.io/artemkaxboy/springdatashowroom:$version"
+        image = "ghcr.io/artemkaxboy/spring-data-showroom"
 
-        tags = setOf(minorVersion, majorVersion)
+        tags = setOf("$version", minorVersion, majorVersion)
 
         auth {
             username = System.getenv("GITHUB_ACTOR") ?: local.getProperty("GITHUB_ACTOR")
