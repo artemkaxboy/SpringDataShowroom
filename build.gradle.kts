@@ -170,7 +170,9 @@ jib {
         ports = listOf("8080")
 
         environment = mapOf(
-            "IMAGE_VERSION" to "$version"
+            "APPLICATION_NAME" to name,
+            "APPLICATION_VERSION" to "$version",
+            "APPLICATION_REVISION" to commitHash
         )
 
         labels = mapOf(

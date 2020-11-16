@@ -19,10 +19,8 @@ springdoc:
     tags-sorter: alpha
 
 application:
-  name: Spring Data Showroom Application
   description: Test application to play with spring data and measure different ways of working with DB.
   contact:
     email: artemkaxboy@gmail.com
     url: https://github.com/artemkaxboy
     name: Artem Kolin
-  version: 0.1-SNAPSHOT

@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
+private const val DEFAULT_APPLICATION_VERSION = "local"
+private const val DEFAULT_APPLICATION_REVISION = ""
 private const val DEFAULT_APPLICATION_NAME = "Spring Boot Application"
 
 @Validated
@@ -14,7 +16,10 @@ class ApplicationProperties {
 
     /** Application version. */
     @NotBlank
-    var version: String = "debug"
+    var version: String = DEFAULT_APPLICATION_VERSION
+
+    /** Application revision. */
+    var revision: String = DEFAULT_APPLICATION_REVISION
 
     /** Application name. */
     @NotBlank

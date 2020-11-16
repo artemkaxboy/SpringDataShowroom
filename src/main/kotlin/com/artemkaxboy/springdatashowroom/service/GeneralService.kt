@@ -9,5 +9,5 @@ class GeneralService(
     private val properties: ApplicationProperties,
 ) {
 
-    fun getApplicationVersion(): VersionDto = VersionDto(properties.version)
+    fun getApplicationVersion(): VersionDto = VersionDto(properties.version, properties.revision)
 }
