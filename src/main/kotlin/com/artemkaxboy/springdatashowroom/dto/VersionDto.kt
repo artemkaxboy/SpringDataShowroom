@@ -6,4 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class VersionDto(
 
     val version: String = "",
+
+    val revision: String = "",
 )
