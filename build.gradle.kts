@@ -4,7 +4,6 @@ import org.ajoberstar.grgit.Commit
 import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
-import java.time.ZonedDateTime
 
 plugins {
     val kotlinVersion = "1.4.10"
@@ -29,14 +28,6 @@ plugins {
     id("org.ajoberstar.grgit") version "4.1.0"
 }
 
-val author = "Artem Kolin <artemkaxboy@gmail.com>"
-val sourceUrl = "https://github.com/artemkaxboy/SpringDataShowroom"
-
-// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
-val commit: Commit = Grgit.open { currentDir = projectDir }.head()
-val commitTime: ZonedDateTime = commit.dateTime
-val commitHash: String = commit.id.take(8) // short commit id contains 8 chars
-
 val local = Properties().apply {
     rootProject.file("local.properties")
         .takeIf { it.exists() }
@@ -45,7 +36,7 @@ val local = Properties().apply {
 }
 
 group = "com.artemkaxboy"
-version = local.getProperty("application.version") ?: "local"
+version = System.getenv("RELEASE_VERSION") ?: project.properties["applicationVersion"] ?: "local"
 
 sourceSets {
     test {
@@ -61,6 +52,8 @@ repositories {
 }
 
 dependencies {
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // ----------------------- database ------------------------
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -120,6 +113,17 @@ tasks {
         }
     }
 
+    withType<com.google.cloud.tools.jib.gradle.BuildImageTask> {
+        project.extra["minorVersion"] = "$version".replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
+        project.extra["majorVersion"] = "$version".replace("^(\\d+).*$".toRegex(), "$1")
+
+        // https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
+        val commit: Commit = Grgit.open { currentDir = projectDir }.head()
+
+        project.extra["commitTime"] = "${commit.dateTime}"
+        project.extra["commitHash"] = commit.id.take(8) // short commit id contains 8 chars
+    }
+
     // https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
     jacocoTestReport {
         dependsOn("test")
@@ -134,20 +138,35 @@ tasks {
 }
 
 jib {
-    to {
-        image = "ghcr.io/artemkaxboy/springdatashowroom"
+    val author: String by project
+    val sourceUrl: String by project
 
-        tags = setOf("latest", "$version")
+    val minorVersion: String by project
+    val majorVersion: String by project
+
+    val commitTime: String by project
+    val commitHash: String by project
+
+    from {
+        // https://console.cloud.google.com/gcr/images/distroless/GLOBAL/java?gcrImageListsize=30
+        // image = "gcr.io/distroless/java:11-nonroot"
+        image = "gcr.io/distroless/java@sha256:40671acefa51d12e33f547fc4950b6de430c905e61ca821d9c16ab5133ede762"
+    }
+
+    to {
+        image = "ghcr.io/artemkaxboy/spring-data-showroom"
+
+        tags = setOf("$version", minorVersion, majorVersion)
 
         auth {
-            username = local.getProperty("github.username") ?: System.getenv("GITHUB_ACTOR")
-            password = local.getProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+            username = System.getenv("GITHUB_ACTOR") ?: local.getProperty("GITHUB_ACTOR")
+            password = System.getenv("CONTAINER_REGISTRY_TOKEN") ?: local.getProperty("CONTAINER_REGISTRY_TOKEN")
         }
     }
 
     container {
         user = "999:999"
-        creationTime = "$commitTime"
+        creationTime = commitTime
         ports = listOf("8080")
 
         environment = mapOf(
@@ -156,7 +175,7 @@ jib {
 
         labels = mapOf(
             "maintainer" to author,
-            "org.opencontainers.image.created" to "$commitTime",
+            "org.opencontainers.image.created" to commitTime,
             "org.opencontainers.image.authors" to author,
             "org.opencontainers.image.url" to sourceUrl,
             "org.opencontainers.image.documentation" to sourceUrl,
