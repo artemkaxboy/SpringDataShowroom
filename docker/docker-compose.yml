@@ -3,7 +3,7 @@ version: "3.6"
 services:
 
   app:
-    image: ghcr.io/artemkaxboy/spring-data-showroom:0.1.15
+    image: ghcr.io/artemkaxboy/spring-data-showroom:0.1
     depends_on:
       - db
     ports:
