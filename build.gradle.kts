@@ -29,14 +29,6 @@ plugins {
     id("org.ajoberstar.grgit") version "4.1.0"
 }
 
-val author = "Artem Kolin <artemkaxboy@gmail.com>"
-val sourceUrl = "https://github.com/artemkaxboy/SpringDataShowroom"
-
-// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
-val commit: Commit = Grgit.open { currentDir = projectDir }.head()
-val commitTime: ZonedDateTime = commit.dateTime
-val commitHash: String = commit.id.take(8) // short commit id contains 8 chars
-
 val local = Properties().apply {
     rootProject.file("local.properties")
         .takeIf { it.exists() }
@@ -45,7 +37,7 @@ val local = Properties().apply {
 }
 
 group = "com.artemkaxboy"
-version = System.getenv("RELEASE_VERSION") ?: local.getProperty("application.version") ?: "local"
+version = System.getenv("RELEASE_VERSION") ?: project.properties["applicationVersion"] ?: "local"
 
 sourceSets {
     test {
@@ -120,6 +112,17 @@ tasks {
         }
     }
 
+    withType<com.google.cloud.tools.jib.gradle.BuildImageTask> {
+        project.extra["minorVersion"] = (version as String).replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
+        project.extra["majorVersion"] = (version as String).replace("^(\\d+).*$".toRegex(), "$1")
+
+        // https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
+        val commit: Commit = Grgit.open { currentDir = projectDir }.head()
+
+        project.extra["commitTime"] = "${commit.dateTime}"
+        project.extra["commitHash"] = commit.id.take(8) // short commit id contains 8 chars
+    }
+
     // https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
     jacocoTestReport {
         dependsOn("test")
@@ -134,13 +137,25 @@ tasks {
 }
 
 jib {
-    from {
-        image = "gcr.io/distroless/java:11-nonroot"
-    }
-    to {
-        image = "ghcr.io/artemkaxboy/springdatashowroom"
+    val author: String by project
+    val sourceUrl: String by project
 
-        tags = setOf("latest", "$version")
+    val minorVersion: String by project
+    val majorVersion: String by project
+
+    val commitTime: String by project
+    val commitHash: String by project
+
+    from {
+        // https://console.cloud.google.com/gcr/images/distroless/GLOBAL/java?gcrImageListsize=30
+        // image = "gcr.io/distroless/java:11-nonroot"
+        image = "gcr.io/distroless/java@sha256:40671acefa51d12e33f547fc4950b6de430c905e61ca821d9c16ab5133ede762"
+    }
+
+    to {
+        image = "ghcr.io/artemkaxboy/springdatashowroom:$version"
+
+        tags = setOf(minorVersion, majorVersion)
 
         auth {
             username = System.getenv("GITHUB_ACTOR") ?: local.getProperty("GITHUB_ACTOR")
@@ -150,7 +165,7 @@ jib {
 
     container {
         user = "999:999"
-        creationTime = "$commitTime"
+        creationTime = commitTime
         ports = listOf("8080")
 
         environment = mapOf(
@@ -159,7 +174,7 @@ jib {
 
         labels = mapOf(
             "maintainer" to author,
-            "org.opencontainers.image.created" to "$commitTime",
+            "org.opencontainers.image.created" to commitTime,
             "org.opencontainers.image.authors" to author,
             "org.opencontainers.image.url" to sourceUrl,
             "org.opencontainers.image.documentation" to sourceUrl,
