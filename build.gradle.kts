@@ -4,7 +4,6 @@ import org.ajoberstar.grgit.Commit
 import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.konan.properties.Properties
-import java.time.ZonedDateTime
 
 plugins {
     val kotlinVersion = "1.4.10"
@@ -53,6 +52,8 @@ repositories {
 }
 
 dependencies {
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // ----------------------- database ------------------------
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
