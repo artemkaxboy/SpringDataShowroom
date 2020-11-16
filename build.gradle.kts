@@ -114,8 +114,8 @@ tasks {
     }
 
     withType<com.google.cloud.tools.jib.gradle.BuildImageTask> {
-        project.extra["minorVersion"] = (version as String).replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
-        project.extra["majorVersion"] = (version as String).replace("^(\\d+).*$".toRegex(), "$1")
+        project.extra["minorVersion"] = "$version".replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
+        project.extra["majorVersion"] = "$version".replace("^(\\d+).*$".toRegex(), "$1")
 
         // https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
         val commit: Commit = Grgit.open { currentDir = projectDir }.head()
