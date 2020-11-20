@@ -1,22 +1,30 @@
-name: Check commit
+# Jobs to run on PR, tests, lint, check, etc.
+name: Main branch verification
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-
   push:
     branches:
-      - "master"
+      - main
 
 jobs:
 
-  tests:
-    name: Test code
+  test-main:
+    name: Test main branch
     runs-on: ubuntu-latest
     steps:
 
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-main
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - uses: actions/setup-java@v1
         with:
@@ -27,8 +35,6 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: jacocoTestReport
-          # configuration-cache-enabled: true
-          dependencies-cache-enabled: true
 
       - uses: actions/upload-artifact@v2
         with:
