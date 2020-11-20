@@ -1,3 +1,4 @@
+# Jobs to run on new release tag: publishing, documentation, final tests
 name: Release
 
 on:
@@ -7,8 +8,8 @@ on:
 
 jobs:
 
-  create-github-release:
-    name: Create Release
+  publish:
+    name: Publish final version
     runs-on: ubuntu-latest
     steps:
 

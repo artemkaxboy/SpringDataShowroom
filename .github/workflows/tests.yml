@@ -1,3 +1,4 @@
+# Jobs to run on PR, tests, lint, check, etc.
 name: Check commit
 
 on:
@@ -19,6 +20,10 @@ jobs:
         uses: actions/checkout@v2
 
       - uses: nelonoel/branch-name@v1.0.1
+
+      - run: |
+          export
+          echo $BRANCH_NAME
 
       - name: Setup cache
         uses: actions/cache@v2
