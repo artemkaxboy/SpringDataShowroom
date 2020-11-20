@@ -25,7 +25,7 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ github.ref }}
           restore-keys: |
-            ${{ runner.os }}-gradle-master
+            ${{ runner.os }}-gradle-main
             ${{ runner.os }}-gradle-
 
       - uses: actions/setup-java@v1
