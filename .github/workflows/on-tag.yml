@@ -15,6 +15,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-master
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+
       - name: Set RELEASE_VERSION variable
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
@@ -24,4 +35,3 @@ jobs:
           CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
         with:
           arguments: jib
-          dependencies-cache-enabled: true
