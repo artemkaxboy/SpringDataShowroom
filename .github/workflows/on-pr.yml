@@ -15,13 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - run: export
+
       - name: Setup cache
         uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ env.GITHUB_REF }}
+          key: ${{ runner.os }}-gradle-${{ GITHUB_REF }}
           restore-keys: |
             ${{ runner.os }}-gradle-master
             ${{ runner.os }}-gradle-
