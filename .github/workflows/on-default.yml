@@ -1,15 +1,15 @@
 # Jobs to run on PR, tests, lint, check, etc.
-name: Main branch verification
+name: Default branch verification
 
 on:
   push:
     branches:
-      - master
+      - $default-branch
 
 jobs:
 
-  test-main:
-    name: Test main branch
+  test-default:
+    name: Test default branch
     runs-on: ubuntu-latest
     steps:
 
@@ -22,7 +22,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-main
+          key: ${{ runner.os }}-gradle-default
           restore-keys: |
             ${{ runner.os }}-gradle-
 
