@@ -23,7 +23,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ GITHUB_REF }}
+          key: ${{ runner.os }}-gradle-${{ env.GITHUB_REF }}
           restore-keys: |
             ${{ runner.os }}-gradle-master
             ${{ runner.os }}-gradle-
