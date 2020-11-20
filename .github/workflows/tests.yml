@@ -18,14 +18,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: nelonoel/branch-name@v1.0.1
+
       - name: Setup cache
         uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-PR
+          key: ${{ runner.os }}-gradle-${BRANCH-NAME}
           restore-keys: |
+            ${{ runner.os }}-gradle-master
             ${{ runner.os }}-gradle-
 
       - uses: actions/setup-java@v1
