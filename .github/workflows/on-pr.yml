@@ -5,14 +5,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-  push:
-    branches:
-      - "master"
-
 jobs:
 
   tests:
-    name: Test code
+    name: Test PR
     runs-on: ubuntu-latest
     steps:
 
@@ -31,7 +27,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ env.BRANCH-NAME }}
+          key: ${{ runner.os }}-gradle-${{ $BRANCH-NAME }}
           restore-keys: |
             ${{ runner.os }}-gradle-master
             ${{ runner.os }}-gradle-
