@@ -27,7 +27,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ BRANCH_NAME }}
+          key: ${{ runner.os }}-gradle-${{ env.BRANCH_NAME }}
           restore-keys: |
             ${{ runner.os }}-gradle-master
             ${{ runner.os }}-gradle-
