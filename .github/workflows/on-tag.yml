@@ -22,7 +22,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-main
+          key: ${{ runner.os }}-gradle-default
           restore-keys: |
             ${{ runner.os }}-gradle-
 
