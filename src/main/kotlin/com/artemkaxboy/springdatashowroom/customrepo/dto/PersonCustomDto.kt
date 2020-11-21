@@ -1,4 +1,4 @@
-package com.artemkaxboy.springdatashowroom.customrepo
+package com.artemkaxboy.springdatashowroom.customrepo.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 
