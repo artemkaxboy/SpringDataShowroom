@@ -3,7 +3,8 @@ name: Default branch verification
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches:
+      - master
 
 jobs:
 
