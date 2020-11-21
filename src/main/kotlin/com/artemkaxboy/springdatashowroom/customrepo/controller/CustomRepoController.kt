@@ -1,7 +1,7 @@
 package com.artemkaxboy.springdatashowroom.customrepo.controller
 
 import com.artemkaxboy.springdatashowroom.configuration.API_V1
-import com.artemkaxboy.springdatashowroom.customrepo.PersonCustomDto
+import com.artemkaxboy.springdatashowroom.customrepo.dto.PersonCustomDto
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.service.PersonCustom2Service
 import com.artemkaxboy.springdatashowroom.customrepo.springstyle.service.PersonCustom1Service
 import com.github.artemkaxboy.corelib.exceptions.ExceptionUtils.getMessage
