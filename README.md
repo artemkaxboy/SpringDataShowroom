@@ -1,0 +1,2 @@
+# SpringDataShowroom
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/519f12293e4844d5b500d51375868bcb)](https://app.codacy.com/gh/artemkaxboy/SpringDataShowroom?utm_source=github.com&utm_medium=referral&utm_content=artemkaxboy/SpringDataShowroom&utm_campaign=Badge_Grade)
