@@ -31,6 +31,8 @@ jobs:
       - name: Set RELEASE_VERSION variable
         run: echo "ORG_GRADLE_PROJECT_applicationVersion=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
+      - run: export
+
       - name: Publish docker image
         uses: eskatos/gradle-command-action@v1
         with:
