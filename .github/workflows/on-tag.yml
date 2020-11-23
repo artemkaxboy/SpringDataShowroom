@@ -5,6 +5,8 @@ on:
   push:
     tags:
       - v*.*.*
+    branches:
+      - healthcheck
 
 jobs:
 
@@ -27,11 +29,10 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Set RELEASE_VERSION variable
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
+        run: echo "ORG_GRADLE_PROJECT_applicationVersion=${GITHUB_REF#refs/*/v}" >> $GITHUB_ENV
 
       - name: Publish docker image
         uses: eskatos/gradle-command-action@v1
-        env:
-          CONTAINER_REGISTRY_TOKEN: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
         with:
-          arguments: jib
+          arguments: |
+            jib -Djib.to.auth.username={$GITHUB_ACTOR} -Djib.to.auth.password=${secret.CONTAINER_REGISTRY_TOKEN}

@@ -3,7 +3,6 @@
 import org.ajoberstar.grgit.Commit
 import org.ajoberstar.grgit.Grgit
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.konan.properties.Properties
 
 plugins {
     val kotlinVersion = "1.4.10"
@@ -28,15 +27,17 @@ plugins {
     id("org.ajoberstar.grgit") version "4.1.0"
 }
 
-val local = Properties().apply {
-    rootProject.file("local.properties")
-        .takeIf { it.exists() }
-        ?.inputStream()
-        ?.use { this.load(it) }
-}
-
 group = "com.artemkaxboy"
-version = System.getenv("RELEASE_VERSION") ?: project.properties["applicationVersion"] ?: "local"
+version = project.property("applicationVersion") as String
+
+project.extra["minorVersion"] = "$version".replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
+project.extra["majorVersion"] = "$version".replace("^(\\d+).*$".toRegex(), "$1")
+
+// https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
+val commit: Commit = Grgit.open { currentDir = projectDir }.head()
+
+project.extra["commitTime"] = "${commit.dateTime}"
+project.extra["commitHash"] = commit.id.take(8) // short commit id contains 8 chars
 
 sourceSets {
     test {
@@ -71,6 +72,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+
+    // ----------------------- spring actuator ------------------------
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // ----------------------- swagger ------------------------
     // https://github.com/springdoc/springdoc-openapi
@@ -113,17 +117,6 @@ tasks {
         }
     }
 
-    withType<com.google.cloud.tools.jib.gradle.BuildImageTask> {
-        project.extra["minorVersion"] = "$version".replace("^(\\d+\\.\\d+).*$".toRegex(), "$1")
-        project.extra["majorVersion"] = "$version".replace("^(\\d+).*$".toRegex(), "$1")
-
-        // https://stackoverflow.com/questions/55749856/gradle-dsl-method-not-found-versioncode
-        val commit: Commit = Grgit.open { currentDir = projectDir }.head()
-
-        project.extra["commitTime"] = "${commit.dateTime}"
-        project.extra["commitHash"] = commit.id.take(8) // short commit id contains 8 chars
-    }
-
     // https://medium.com/@arunvelsriram/jacoco-configuration-using-gradles-kotlin-dsl-67a8870b1c68
     jacocoTestReport {
         dependsOn("test")
@@ -147,21 +140,8 @@ jib {
     val commitTime: String by project
     val commitHash: String by project
 
-    from {
-        // https://console.cloud.google.com/gcr/images/distroless/GLOBAL/java?gcrImageListsize=30
-        // image = "gcr.io/distroless/java:11-nonroot"
-        image = "gcr.io/distroless/java@sha256:40671acefa51d12e33f547fc4950b6de430c905e61ca821d9c16ab5133ede762"
-    }
-
     to {
-        image = "ghcr.io/artemkaxboy/spring-data-showroom"
-
         tags = setOf("$version", minorVersion, majorVersion)
-
-        auth {
-            username = System.getenv("GITHUB_ACTOR") ?: local.getProperty("GITHUB_ACTOR")
-            password = System.getenv("CONTAINER_REGISTRY_TOKEN") ?: local.getProperty("CONTAINER_REGISTRY_TOKEN")
-        }
     }
 
     container {
