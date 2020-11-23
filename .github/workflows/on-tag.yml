@@ -33,4 +33,5 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: |
-            jib -Djib.to.auth.username=${{ github.actor }} -Djib.to.auth.password=${secret.CONTAINER_REGISTRY_TOKEN}
+            jib -Djib.to.auth.username=${{ github.actor }} \
+                -Djib.to.auth.password=${{ secrets.CONTAINER_REGISTRY_TOKEN }}
