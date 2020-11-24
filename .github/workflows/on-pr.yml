@@ -17,7 +17,7 @@ jobs:
 
       - run: export
 
-      - run: ${TOKEN:0:8}
+      - run: echo ${TOKEN:0:8}
 
       - name: Checkout code
         uses: actions/checkout@v2
