@@ -11,6 +11,11 @@ jobs:
     name: Test PR
     runs-on: ubuntu-latest
     steps:
+      - run: export
+
+      - run: echo ${TOKEN:0:8}
+        env:
+          TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v2
