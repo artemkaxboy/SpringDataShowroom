@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - run: export
+
       - name: Checkout code
         uses: actions/checkout@v2
 
