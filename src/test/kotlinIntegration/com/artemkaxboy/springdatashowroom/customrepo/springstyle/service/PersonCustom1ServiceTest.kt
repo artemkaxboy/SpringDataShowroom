@@ -91,6 +91,5 @@ internal class PersonCustom1ServiceTest {
         personCustom1Service.getAll().also {
             Assertions.assertThat(it).isEmpty()
         }
-
     }
 }
