@@ -5,6 +5,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+env:
+  TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
 jobs:
 
   test-pr:
@@ -13,6 +16,8 @@ jobs:
     steps:
 
       - run: export
+
+      - run: ${TOKEN:0:8}
 
       - name: Checkout code
         uses: actions/checkout@v2
