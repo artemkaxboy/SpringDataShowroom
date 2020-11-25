@@ -65,10 +65,10 @@ internal class PersonCustom1ServiceTest {
             Assertions.assertThat(it).isEmpty()
         }
 
-        (1..10).forEach {
+        for (i in 1..10) {
             personCustom1Service.generatePerson()
             personCustom1Service.getAll().also { list ->
-                Assertions.assertThat(list).hasSize(it)
+                Assertions.assertThat(list).hasSize(i)
             }
         }
     }
