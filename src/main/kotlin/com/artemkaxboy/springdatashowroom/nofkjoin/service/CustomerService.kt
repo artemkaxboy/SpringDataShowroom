@@ -13,12 +13,18 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
+/**
+ * Service provides high-level functions to work with [CustomerRepository] and [OrderRepository].
+ */
 @Service
 class CustomerService(
     private val customerRepository: CustomerRepository,
     private val orderRepository: OrderRepository,
 ) {
 
+    /**
+     * Adds new customer to repository.
+     */
     fun addCustomer(newCustomer: Customer): Result<Customer> {
         return validateNewCustomer(newCustomer)
             .getOrElse { return Result.failure(it) }
@@ -26,7 +32,7 @@ class CustomerService(
             .also { logger.trace { "Added new customer: ${it.getOrNull()}" } }
     }
 
-    fun validateNewCustomer(newCustomer: Customer): Result<Customer> {
+    private fun validateNewCustomer(newCustomer: Customer): Result<Customer> {
 
         if (customerRepository.existsByAccount(newCustomer.account))
             return Result.failure(IllegalArgumentException("This account is already in use"))
@@ -34,20 +40,26 @@ class CustomerService(
         return Result.success(newCustomer)
     }
 
-    fun validateExistingCustomer(id: Long, newCustomer: Customer): Result<Customer> {
+    private fun validateExistingCustomer(id: Long, existingCustomer: Customer): Result<Customer> {
 
-        if (newCustomer.id > 0 && newCustomer.id != id)
+        if (existingCustomer.id > 0 && existingCustomer.id != id)
             return Result.failure(IllegalArgumentException("Id cannot be updated"))
 
         if (!hasCustomer(id))
             return Result.failure(IllegalArgumentException("Unknown customer (id=$id)"))
 
-        if (customerRepository.existsByIdNotAndAccount(id, newCustomer.account))
+        if (customerRepository.existsByIdNotAndAccount(id, existingCustomer.account))
             return Result.failure(IllegalArgumentException("This account is already in use"))
 
-        return Result.success(newCustomer)
+        return Result.success(existingCustomer)
     }
 
+    /**
+     * Updates customer with given [id].
+     *
+     * @param id of customer to update
+     * @param customer updated customer data, customer's id must match [id] or be negative
+     */
     fun updateCustomer(id: Long, customer: Customer): Result<Customer> {
 
         return validateExistingCustomer(id, customer)
@@ -57,6 +69,9 @@ class CustomerService(
             .also { logger.trace { "Customer (id=$id) updated: ${it.getOrNull()}" } }
     }
 
+    /**
+     * Deletes customer with given [id].
+     */
     @Transactional
     fun deleteCustomer(id: Long): Result<Unit> {
 
@@ -68,15 +83,24 @@ class CustomerService(
             .also { logger.trace { "Customer (id=$id) deleted" } }
     }
 
+    /**
+     * Finds all customers sorted by id.
+     */
     fun getCustomers(): List<Customer> =
         customerRepository.findAll(Sort.by(Customer::id.name))
 
+    /**
+     * Finds customer with given [id].
+     */
     fun getCustomer(id: Long): Result<Customer> =
         customerRepository.findByIdOrNull(id)?.let { Result.success(it) }
             ?: Result.failure(IllegalArgumentException("Unknown customer (id=$id)"))
 
-    fun hasCustomer(id: Long): Boolean = customerRepository.existsById(id)
+    private fun hasCustomer(id: Long): Boolean = customerRepository.existsById(id)
 
+    /**
+     * Deletes all customers.
+     */
     @Transactional
     fun deleteAllCustomers() {
         orderRepository.deleteAll()
@@ -84,6 +108,9 @@ class CustomerService(
             .also { logger.trace { "All customers deleted" } }
     }
 
+    /**
+     * Adds new order for given [customerId].
+     */
     fun addOrder(customerId: Long, newOrder: Order): Result<Order> {
 
         return getCustomer(customerId)
@@ -93,10 +120,16 @@ class CustomerService(
             .also { logger.trace { "Added new order: $it" } }
     }
 
+    /**
+     * Deletes all orders associated with given [account].
+     */
     fun deleteOrdersByAccount(account: String) =
         orderRepository.deleteAllByAccount(account)
             .also { logger.trace { "Orders for account ($account) deleted" } }
 
+    /**
+     * Finds all order by given [customerId].
+     */
     fun getOrders(customerId: Long): Result<List<Order>> =
         getCustomer(customerId)
             .getOrElse { return Result.failure(it) }
