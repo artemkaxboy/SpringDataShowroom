@@ -12,7 +12,6 @@ import com.github.artemkaxboy.corelib.exceptions.ExceptionUtils.getMessage
 import com.github.artemkaxboy.corelib.exceptions.getOrElse
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import mu.KotlinLogging
 import org.modelmapper.ModelMapper
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -88,8 +87,6 @@ class CustomerController(
         @PathVariable
         customerId: Long,
     ) {
-
-        KotlinLogging.logger { }
 
         customerService.deleteCustomer(customerId)
             .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot delete customer")) }

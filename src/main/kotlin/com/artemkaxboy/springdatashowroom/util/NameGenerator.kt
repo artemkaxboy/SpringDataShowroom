@@ -1,5 +1,8 @@
 package com.artemkaxboy.springdatashowroom.util
 
+/**
+ * Container for functions [generate].
+ */
 object NameGenerator {
 
     private val firsts = listOf(
@@ -28,5 +31,8 @@ object NameGenerator {
         "Romanov"
     )
 
+    /**
+     * Generates a pair of first and last name. Uses set of 10 first and 10 last names, combining them randomly.
+     */
     fun generate() = "${firsts.random()} ${lasts.random()}"
 }
