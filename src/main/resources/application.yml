@@ -2,12 +2,13 @@ server:
   error:
     include-message: always
     include-exception: on
+  port: 8080
 
 spring:
-#  datasource:
-#    password: password
-#    url: jdbc:postgresql://localhost:5432/database
-#    username: username
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo-database
+    username: demo-username
+    password: demo-password
 
   jpa:
     hibernate:
