@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
+private const val UPDATE_RATING_ERROR = "Cannot update rating"
+
 @RestController
 @Validated
 @RequestMapping(value = ["api/$API_V1/personCustom"])
@@ -77,7 +79,7 @@ class CustomRepoController(
     ): PersonCustomDto {
 
         return personCustom1Service.updateRating(personId, rating)
-            .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot update rating")) }
+            .getOrElse { throw IllegalArgumentException(it.getMessage(UPDATE_RATING_ERROR)) }
             .let { modelMapper.map(it, PersonCustomDto::class.java) }
     }
 
@@ -115,7 +117,7 @@ class CustomRepoController(
     ): PersonCustomDto {
 
         return personCustom2Service.updateRating(personId, rating)
-            .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot update rating")) }
+            .getOrElse { throw IllegalArgumentException(it.getMessage(UPDATE_RATING_ERROR)) }
             .let { modelMapper.map(it, PersonCustomDto::class.java) }
     }
 
@@ -153,7 +155,7 @@ class CustomRepoController(
     ): PersonCustomDto {
 
         return personCustom3Service.updateRating(personId, rating)
-            .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot update rating")) }
+            .getOrElse { throw IllegalArgumentException(it.getMessage(UPDATE_RATING_ERROR)) }
             .let { modelMapper.map(it, PersonCustomDto::class.java) }
     }
 }
