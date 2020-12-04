@@ -1,6 +1,7 @@
 package com.artemkaxboy.springdatashowroom.customrepo.controller
 
 import com.artemkaxboy.springdatashowroom.configuration.API_V1
+import com.artemkaxboy.springdatashowroom.customrepo.delegate.service.PersonCustom3Service
 import com.artemkaxboy.springdatashowroom.customrepo.dto.PersonCustomDto
 import com.artemkaxboy.springdatashowroom.customrepo.extensions.service.PersonCustom2Service
 import com.artemkaxboy.springdatashowroom.customrepo.springstyle.service.PersonCustom1Service
@@ -33,6 +34,7 @@ class CustomRepoController(
 
     private val personCustom1Service: PersonCustom1Service,
     private val personCustom2Service: PersonCustom2Service,
+    private val personCustom3Service: PersonCustom3Service,
     private val modelMapper: ModelMapper,
 ) {
 
@@ -113,6 +115,44 @@ class CustomRepoController(
     ): PersonCustomDto {
 
         return personCustom2Service.updateRating(personId, rating)
+            .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot update rating")) }
+            .let { modelMapper.map(it, PersonCustomDto::class.java) }
+    }
+
+    @GetMapping(
+        "/custom3",
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    fun getPeopleCustom3(): List<PersonCustomDto> {
+
+        return personCustom3Service.getAll()
+            .map { modelMapper.map(it, PersonCustomDto::class.java) }
+    }
+
+    @PostMapping(
+        "/custom3/generate",
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    fun generatePersonCustom3(): PersonCustomDto {
+
+        return modelMapper.map(personCustom3Service.generatePerson(), PersonCustomDto::class.java)
+    }
+
+    @PatchMapping(
+        "/custom3/{personId}/rating",
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    fun updateRating3(
+        @Parameter(description = "Person's ID", example = "15")
+        @PathVariable
+        personId: Long,
+
+        @Parameter(description = "New rating value", example = "250")
+        @RequestParam
+        rating: Int,
+    ): PersonCustomDto {
+
+        return personCustom3Service.updateRating(personId, rating)
             .getOrElse { throw IllegalArgumentException(it.getMessage("Cannot update rating")) }
             .let { modelMapper.map(it, PersonCustomDto::class.java) }
     }
