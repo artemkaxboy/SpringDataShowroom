@@ -1,4 +1,4 @@
-package com.artemkaxboy.springdatashowroom.lazy.kotlindata
+package com.artemkaxboy.springdatashowroom.lazy.kotlin
 
 import org.springframework.data.jpa.repository.JpaRepository
 
