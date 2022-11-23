@@ -168,3 +168,7 @@ jib {
         )
     }
 }
+
+allOpen {
+    annotation("javax.persistence.Entity")
+}

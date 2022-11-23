@@ -11,7 +11,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
-open class Car2 {
+class Car2 {
 
     @Id
     private var id: Long? = null
@@ -19,7 +19,7 @@ open class Car2 {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "brand_id")
-    open var brand: Brand2? = null
+    var brand: Brand2? = null
 
     @Column(name = "brand_id", insertable = false, updatable = false)
     private val brandId: Long? = null
