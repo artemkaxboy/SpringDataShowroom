@@ -1,6 +1,6 @@
 package com.artemkaxboy.springdatashowroom.util
 
-import com.artemkaxboy.springdatashowroom.lazy.kotlin.Car2Repository
+import com.artemkaxboy.springdatashowroom.lazy.kotlindata.Car3Repository
 import org.assertj.core.api.Assertions
 import org.hibernate.LazyInitializationException
 import org.junit.jupiter.api.Test
@@ -9,14 +9,14 @@ import org.springframework.boot.test.context.SpringBootTest
 import javax.transaction.Transactional
 
 @SpringBootTest
-internal class Car2Test {
+internal class Car3Test {
 
     @Autowired
-    private lateinit var car2Repository: Car2Repository
+    private lateinit var car3Repository: Car3Repository
 
     @Test
     fun failWhenLazyIsAccessible() {
-        val actual = car2Repository.findAll().firstOrNull()
+        val actual = car3Repository.findAll().firstOrNull()
 
         Assertions.assertThat(actual)
             .isNotNull
@@ -29,7 +29,7 @@ internal class Car2Test {
     @Test
     @Transactional
     fun passWhenLazyAccessibleInSession() {
-        val actual = car2Repository.findAll().firstOrNull()
+        val actual = car3Repository.findAll().firstOrNull()
 
         Assertions.assertThat(actual)
             .isNotNull
