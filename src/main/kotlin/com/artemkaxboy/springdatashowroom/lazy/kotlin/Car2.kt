@@ -19,7 +19,7 @@ open class Car2 {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "brand_id")
-    lateinit var brand: Brand2
+    open var brand: Brand2? = null
 
     @Column(name = "brand_id", insertable = false, updatable = false)
     private val brandId: Long? = null

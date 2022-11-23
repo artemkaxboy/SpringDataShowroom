@@ -6,6 +6,6 @@ import javax.persistence.Id
 @Entity
 open class Brand2 {
     @Id
-    var id: Long? = null
-    var name: String? = null
+    open var id: Long? = null
+    open var name: String? = null
 }
