@@ -58,11 +58,10 @@ dependencies {
 
     // ----------------------- database ------------------------
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("org.postgresql:postgresql")
+    implementation("org.postgresql:postgresql")
     // implementation("org.flywaydb:flyway-core")
 
     // ----------------------- tests ------------------------
-    testRuntimeOnly("com.h2database:h2")
     testImplementation("io.mockk:mockk:1.10.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

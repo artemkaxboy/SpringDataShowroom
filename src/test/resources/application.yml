@@ -5,11 +5,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1
+    url: jdbc:postgresql://localhost:5432/demo-database
+    username: demo-username
+    password: demo-password
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
     properties.hibernate.format_sql: true
     show-sql: true
